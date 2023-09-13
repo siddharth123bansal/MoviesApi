@@ -12,9 +12,21 @@ app.get("/", async (req, res) => {
    if(users.length) return res.json(users)
    else return res.json([])
 })
+const schema={
+    name:{ type: "string",required:true },
+    phone:{ type: "integer",required:true },
+    password:{ type: "string",required:true },
+    email:{ type: "string",required:true },
+    type:{ type: "integer",required:true },
+    profile:{ type: "string"}
+}
 app.post('/users/add',async (req,res)=>{
     try {
         // missing validation
+        const err=schema.validate(req.body)
+        if(err.Error){
+            return res.status(400).send(err.Error)
+        }
          await prisma.users.create({
           data: req.body,
         });
@@ -33,6 +45,7 @@ app.put('/users/update/:id', async (req, res) => {
       if (!existingUser) {
         return res.status(404).send("User not found");
       }
+
       const updatedFields = {};
       if (req.body.name && req.body.name !== existingUser.name) {
         updatedFields.name = req.body.name;
@@ -83,26 +96,26 @@ app.post('/users/subscription/:id', async (req, res) => {
     try {
         
         // implement destructure in proper way with error handling as discussed
+        const addFields={}
+        addFields.userid=id
         if(!req.body.name ){
             return res.status(400).send("Enter valid name")
+        }else{
+            addFields.name=req.body.name
         }
         if(!req.body.price ){
             return res.status(400).send("Enter valid price")
+        }else{
+            addFields.price=req.body.price
         }
         if(!req.body.duration){
             return res.status(400).send("Enter valid duration")
+        }else{
+            addFields.duration=req.body.duration
         }
-      const { name, price, duration } = req.body;
-      if (!name || !price || !userid || !duration) {
-        throw new Error("Missing required fields");
-      }
+        if(Object.keys(addFields).length===0){return res.send("Add all fields")}
       await prisma.subscription.create({
-        data: {
-          name,
-          price,
-          id,
-          duration,
-        },
+        data: addFields,
       });
       res.send("Subscription created successfully");
     } catch (error) {
