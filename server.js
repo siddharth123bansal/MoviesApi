@@ -10,7 +10,7 @@ app.get("/", async (req, res) => {
         }
     })
    if(users.length) return res.json(users)
-   else return res.json([])
+   else return res.json("no user found")
 })
 const schema={
     name:{ type: "string",required:true },
@@ -94,7 +94,7 @@ app.put('/users/update/:id', async (req, res) => {
 app.post('/users/subscription/:id', async (req, res) => {
     const id=parseInt(req.params.id)
     try {
-        
+      
         // implement destructure in proper way with error handling as discussed
         const addFields={}
         addFields.userid=id
@@ -159,5 +159,4 @@ app.post('/users/subscription/:id', async (req, res) => {
         res.status(400).send(err)
     }
   })
-
   app.listen(PORT,()=> console.log(`server started on port ${PORT}`));
