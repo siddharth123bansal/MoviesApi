@@ -1,5 +1,6 @@
 const express = require("express");
 const {prisma} = require("./connection");
+const Joi = require('joi');
 const app = express();
 app.use(express.json())
 const PORT = 3000
@@ -12,14 +13,14 @@ app.get("/", async (req, res) => {
    if(users.length) return res.json(users)
    else return res.json("no user found")
 })
-const schema={
-    name:{ type: "string",required:true },
-    phone:{ type: "integer",required:true },
-    password:{ type: "string",required:true },
-    email:{ type: "string",required:true },
-    type:{ type: "integer",required:true },
-    profile:{ type: "string"}
-}
+const schema = Joi.object({
+    name: Joi.string().required(),
+    phone: Joi.number().integer().required(),
+    password: Joi.string().required(),
+    email: Joi.string().email().required(),
+    type: Joi.number().integer().required(),
+    profile: Joi.string(),
+  });
 app.post('/users/add',async (req,res)=>{
     try {
         // missing validation
