@@ -29,7 +29,7 @@ model subscription {
 
 model Movie {
   filmid      Int       @id @default(autoincrement())
-  views       Int
+  views       Int?
   releasedate DateTime
   duration    Int
   description String

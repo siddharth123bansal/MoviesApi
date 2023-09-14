@@ -1,6 +1,7 @@
 const express = require("express");
 const {prisma} = require("./connection");
 const Joi = require('joi');
+const postmovie = require("./postMovie");
 const app = express();
 app.use(express.json())
 const PORT = 3001 
@@ -11,8 +12,17 @@ const corsOptions = {
   origin: 'http://localhost:3000',
 };
 app.use(cors(corsOptions));
-
-
+app.post('/movies/add', async (req, res) => {
+  try {
+    const movie = await prisma.movie.create({
+      data: req.body,
+    });
+    res.send("Movie created successfully");
+  } catch (error) {
+    console.error("Error creating movie:", error);
+    res.status(400).json({ error: "Failed to create the movie." });
+  }
+});
 app.get("/", async (req, res) => {
     const users=await prisma.users.findMany({
         include:{
