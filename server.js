@@ -59,6 +59,34 @@ const schema = Joi.object({
       res.status(500).json({ error: 'An error occurred while fetching movies.' });
     }
   });
+  app.get('/movies/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const movie = await prisma.movie.findFirst({
+        where: {
+          filmid: id,
+        },
+        include: {
+          directorData: {
+            include: {
+              director: true,
+            },
+          },
+        },
+      });
+  
+      if (!movie) {
+        res.status(404).json({ error: 'Movie not found.' });
+        return;
+      }
+  
+      res.json(movie);
+    } catch (error) {
+      console.error('Error fetching movie:', error);
+      res.status(500).json({ error: 'An error occurred while fetching the movie.' });
+    }
+  });
+  
 
 
   app.get('/directors', async (req, res) => {
