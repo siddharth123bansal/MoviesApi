@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,21 +6,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model Users{
-  userid Int @id @default(autoincrement())
-  name String
-  phone Int
-  email String
-  password String
-  type Int 
-  profile String?
-  subs subscription[]
+
+model Users {
+  userid    Int           @id @default(autoincrement())
+  name      String
+  phone     Int
+  email     String
+  password  String
+  type      Int
+  profile   String?
+  subs      subscription[]
 }
-model subscription{
-  id Int @id @default(autoincrement())
-  name String
-  price Int
-  userid Int 
-  duration Int
-  user Users @relation(fields: [userid], references: [userid])
+
+model subscription {
+  id        Int           @id @default(autoincrement())
+  name      String
+  price     Int
+  userid    Int
+  duration  Int
+  user      Users         @relation(fields: [userid], references: [userid])
+}
+
+model Movie {
+  filmid      Int       @id @default(autoincrement())
+  views       Int
+  releasedate DateTime
+  duration    Int
+  description String
+  type        String
+  film        String
+  country     String
+  directors   Director[] @relation("MovieDirectors")
+  directorData DirectorData[] @relation("MovieDirectors")
+}
+
+// Define the Directors model
+model Director {
+  dirid Int      @id @default(autoincrement())
+  name  String
+  age   Int
+
+  movies Movie[] @relation("MovieDirectors")
+  directorData DirectorData[] @relation("MovieDirectors")
+}
+
+model DirectorData {
+  id       Int     @id @default(autoincrement())
+  filmid   Int 
+  dirid    Int
+  movie    Movie   @relation("MovieDirectors", fields: [filmid], references: [filmid])
+  director Director @relation("MovieDirectors", fields: [dirid], references: [dirid])
+  
+  // @@map(name: "unique_movie_director_data", fields: ["filmid", "dirid"])
+
 }

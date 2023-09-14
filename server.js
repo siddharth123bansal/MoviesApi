@@ -3,7 +3,16 @@ const {prisma} = require("./connection");
 const Joi = require('joi');
 const app = express();
 app.use(express.json())
-const PORT = 3000
+const PORT = 3001 
+
+const cors = require('cors');
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+};
+app.use(cors(corsOptions));
+
+
 app.get("/", async (req, res) => {
     const users=await prisma.users.findMany({
         include:{
@@ -21,6 +30,36 @@ const schema = Joi.object({
     type: Joi.number().integer().required(),
     profile: Joi.string(),
   });
+  app.get('/movies', async (req, res) => {
+    try {
+      const movies = await prisma.movie.findMany({
+        include: {
+          directorData: {
+            include:{
+             director:true
+            }
+          }
+          // directors: true,
+          
+        },
+      });
+      res.json(movies);
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      res.status(500).json({ error: 'An error occurred while fetching movies.' });
+    }
+  });
+
+
+  app.get('/directors', async (req, res) => {
+    try {
+      const directors = await prisma.director.findMany()
+      res.json(directors);
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
 app.post('/users/add',async (req,res)=>{
     try {
         // missing validation
