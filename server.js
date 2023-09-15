@@ -1,13 +1,10 @@
 const express = require("express");
 const {prisma} = require("./connection");
 const Joi = require('joi');
-const postmovie = require("./postMovie");
 const app = express();
 app.use(express.json())
 const PORT = 3001 
-
 const cors = require('cors');
-
 const corsOptions = {
   origin: 'http://localhost:3000',
 };
@@ -48,9 +45,7 @@ const schema = Joi.object({
             include:{
              director:true
             }
-          }
-          // directors: true,
-          
+          }     
         },
       });
       res.json(movies);
@@ -74,12 +69,10 @@ const schema = Joi.object({
           },
         },
       });
-  
       if (!movie) {
         res.status(404).json({ error: 'Movie not found.' });
         return;
       }
-  
       res.json(movie);
     } catch (error) {
       console.error('Error fetching movie:', error);
@@ -112,10 +105,6 @@ const schema = Joi.object({
       res.status(400).send(err)
     }
   })
-
-
-  
-
   app.get('/directors', async (req, res) => {
     try {
       const directors = await prisma.director.findMany()
@@ -124,7 +113,6 @@ const schema = Joi.object({
       console.log(error)
     }
   })
-
 app.post('/users/add',async (req,res)=>{
     try {
         // missing validation
@@ -146,11 +134,9 @@ app.put('/users/update/:id', async (req, res) => {
       const existingUser = await prisma.users.findUnique({
         where: { userid: req.params.id },
       });
-  
       if (!existingUser) {
         return res.status(404).send("User not found");
       }
-
       const updatedFields = {};
       if (req.body.name && req.body.name !== existingUser.name) {
         updatedFields.name = req.body.name;
@@ -177,7 +163,6 @@ app.put('/users/update/:id', async (req, res) => {
         where: { userid: req.params.id },
         data: updatedFields,
       });
-  
       res.send("User Updated");
     } catch (error) {
       console.error("Error updating user:", error);
