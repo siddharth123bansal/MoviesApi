@@ -86,8 +86,35 @@ const schema = Joi.object({
       res.status(500).json({ error: 'An error occurred while fetching the movie.' });
     }
   });
-  
+  app.put('/update/movie/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await prisma.movie.update({
+        where: {
+          filmid: id,
+        },
+        data: req.body,
+      });
+      res.send("Movie updated successfully")
+    } catch (error) {
+      console.error('Error updating movie:', error);
+      res.status(400).json({ error: error.message || 'An error occurred while updating the movie.' });
+    }
+  });
+  app.delete('/delete/movie/:id',async (req ,res)=>{
+    const id= parseInt(req.params.id)
+    try{
+        await prisma.movie.delete({
+            where:{filmid:id}
+        })
+        res.send("Movie deleted")
+    }catch(err){
+      res.status(400).send(err)
+    }
+  })
 
+
+  
 
   app.get('/directors', async (req, res) => {
     try {
