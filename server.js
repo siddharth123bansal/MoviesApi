@@ -11,7 +11,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.post('/movies/add', async (req, res) => {
   try {
-    const movie = await prisma.movie.create({
+    const movie = await prisma.movie.createMany({
       data: req.body,
     });
     res.send("Movie created successfully");
@@ -52,6 +52,27 @@ const schema = Joi.object({
     } catch (error) {
       console.error('Error fetching movies:', error);
       res.status(500).json({ error: 'An error occurred while fetching movies.' });
+    }
+  });
+  app.post('/directors/add', async (req, res) => {
+    try {
+      await prisma.director.createMany({
+        data: req.body,
+      });
+      res.send("Director created successfully");
+    } catch (error) {
+      console.error("Error creating director:", error);
+      res.status(400).json({ error: "Failed to create the director." });
+    }
+  });
+  app.get('/directors', async (req, res) => {
+    try {
+      const directors = await prisma.director.findMany({
+      });
+      res.json(directors);
+    } catch (error) {
+      console.error('Error fetching directors:', error);
+      res.status(400).json({ error: 'An error occurred while fetching directors.' });
     }
   });
   app.get('/movies/:id', async (req, res) => {

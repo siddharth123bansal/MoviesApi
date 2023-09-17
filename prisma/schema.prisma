@@ -30,12 +30,14 @@ model subscription {
 model Movie {
   filmid      Int       @id @default(autoincrement())
   views       Int?
-  releasedate DateTime
+  releasedate String
   duration    Int
-  description String
-  type        String
+  image      String?
+  rating     String?
+  description String?
+  type        String?
   film        String
-  country     String
+  country     String?
   directors   Director[] @relation("MovieDirectors")
   directorData DirectorData[] @relation("MovieDirectors")
 }
@@ -45,6 +47,7 @@ model Director {
   dirid Int      @id @default(autoincrement())
   name  String
   age   Int
+  image String?
 
   movies Movie[] @relation("MovieDirectors")
   directorData DirectorData[] @relation("MovieDirectors")
