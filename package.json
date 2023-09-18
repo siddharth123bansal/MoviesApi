@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "proxy": "https://movieswebsite-seven.vercel.app",
+  "proxy": "https://movieswebsite-nmhummhzb-siddharth123bansal.vercel.app",
   "scripts": {
     "start": "nodemon server.js"
   },
