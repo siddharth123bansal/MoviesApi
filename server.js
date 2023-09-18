@@ -6,7 +6,7 @@ app.use(express.json())
 const PORT = 3001 
 const cors = require('cors');
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://movieswebsite-seven.vercel.app',
 };
 app.use(cors(corsOptions));
 app.post('/movies/add', async (req, res) => {
