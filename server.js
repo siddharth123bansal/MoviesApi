@@ -65,9 +65,35 @@ const schema = Joi.object({
       res.status(400).json({ error: "Failed to create the director." });
     }
   });
+  app.post('/assigndirectors',async (req,res)=>{
+  try{
+    const {directorid,filmid}=req.body
+    console.log({
+      directorid:directorid,
+      filmid:filmid
+    })
+    await prisma.directorData.create({
+      data:{
+        dirid:directorid,
+        filmid:filmid,
+      }
+    })
+    res.send("Director assigned successfully")
+  } catch(error){
+    console.error("Error assigning director:", error);
+    res.status(400).json({ error: "Failed to assign the director." });
+  } 
+  });
   app.get('/directors', async (req, res) => {
     try {
       const directors = await prisma.director.findMany({
+        include: {
+          directorData: {
+            include:{
+             movie:true
+            }
+          }     
+        },
       });
       res.json(directors);
     } catch (error) {
@@ -80,7 +106,7 @@ const schema = Joi.object({
       const id = parseInt(req.params.id);
       const movie = await prisma.movie.findFirst({
         where: {
-          filmid: id,
+          id: id,
         },
         include: {
           directorData: {
@@ -105,7 +131,7 @@ const schema = Joi.object({
       const id = parseInt(req.params.id);
       await prisma.movie.update({
         where: {
-          filmid: id,
+          id: id,
         },
         data: req.body,
       });
@@ -119,7 +145,7 @@ const schema = Joi.object({
     const id= parseInt(req.params.id)
     try{
         await prisma.movie.delete({
-            where:{filmid:id}
+            where:{id:id}
         })
         res.send("Movie deleted")
     }catch(err){

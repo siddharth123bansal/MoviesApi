@@ -28,7 +28,7 @@ model subscription {
 }
 
 model Movie {
-  filmid      Int       @id @default(autoincrement())
+  id      Int       @id @default(autoincrement())
   views       Int?
   releasedate String
   duration    Int
@@ -44,7 +44,7 @@ model Movie {
 
 // Define the Directors model
 model Director {
-  dirid Int      @id @default(autoincrement())
+  id Int      @id @default(autoincrement())
   name  String
   age   Int
   image String?
@@ -57,8 +57,9 @@ model DirectorData {
   id       Int     @id @default(autoincrement())
   filmid   Int 
   dirid    Int
-  movie    Movie   @relation("MovieDirectors", fields: [filmid], references: [filmid])
-  director Director @relation("MovieDirectors", fields: [dirid], references: [dirid])
+  
+  movie    Movie   @relation("MovieDirectors", fields: [filmid], references: [id])
+  director Director @relation("MovieDirectors", fields: [dirid], references: [id])
   
   // @@map(name: "unique_movie_director_data", fields: ["filmid", "dirid"])
 
