@@ -8,59 +8,55 @@ datasource db {
 }
 
 model Users {
-  userid    Int           @id @default(autoincrement())
-  name      String
-  phone     Int
-  email     String
-  password  String
-  type      Int
-  profile   String?
-  subs      subscription[]
+  userid   Int            @id @default(autoincrement())
+  name     String
+  phone    Int
+  email    String
+  password String
+  type     Int
+  profile  String?
+  subs     subscription[]
 }
 
 model subscription {
-  id        Int           @id @default(autoincrement())
-  name      String
-  price     Int
-  userid    Int
-  duration  Int
-  user      Users         @relation(fields: [userid], references: [userid])
+  id       Int    @id @default(autoincrement())
+  name     String
+  price    Int
+  userid   Int
+  duration Int
+  user     Users  @relation(fields: [userid], references: [userid])
 }
 
 model Movie {
-  id      Int       @id @default(autoincrement())
-  views       Int?
-  releasedate String
-  duration    Int
-  image      String?
-  rating     String?
-  description String?
-  type        String?
-  film        String
-  country     String?
-  directors   Director[] @relation("MovieDirectors")
+  id           Int            @id @default(autoincrement())
+  views        Int?
+  releasedate  String
+  duration     Int
+  image        String?
+  rating       String?
+  description  String?
+  type         String?
+  film         String
+  country      String?
+  directors    Director[]     @relation("MovieDirectors")
   directorData DirectorData[] @relation("MovieDirectors")
 }
 
 // Define the Directors model
 model Director {
-  id Int      @id @default(autoincrement())
-  name  String
-  age   Int
-  image String?
-
-  movies Movie[] @relation("MovieDirectors")
+  id           Int            @id @default(autoincrement())
+  name         String
+  age          Int
+  image        String?
+  movies       Movie[]        @relation("MovieDirectors")
   directorData DirectorData[] @relation("MovieDirectors")
 }
 
 model DirectorData {
-  id       Int     @id @default(autoincrement())
-  filmid   Int 
-  dirid    Int
-  
-  movie    Movie   @relation("MovieDirectors", fields: [filmid], references: [id])
-  director Director @relation("MovieDirectors", fields: [dirid], references: [id])
-  
-  // @@map(name: "unique_movie_director_data", fields: ["filmid", "dirid"])
+  id     Int @id @default(autoincrement())
+  filmid Int
+  dirid  Int
 
+  movie    Movie    @relation("MovieDirectors", fields: [filmid], references: [id])
+  director Director @relation("MovieDirectors", fields: [dirid], references: [id])
 }

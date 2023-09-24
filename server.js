@@ -8,7 +8,7 @@ const cors = require('cors');
 const corsOptions = {
   origin: 'https://movieswebsite-nmhummhzb-siddharth123bansal.vercel.app',
 };
-app.use(cors(corsOptions));
+app.use(cors());
 app.post('/movies/add', async (req, res) => {
   try {
     const movie = await prisma.movie.createMany({
@@ -47,8 +47,9 @@ const schema = Joi.object({
             }
           }     
         },
+        
       });
-      res.json(movies);
+      res.json(movies)
     } catch (error) {
       console.error('Error fetching movies:', error);
       res.status(500).json({ error: 'An error occurred while fetching movies.' });
